@@ -50,8 +50,21 @@ To start the Wombat service, run:
 Wombat provides the following RESTful API endpoints for managing tasks within queues:
 
 - **GET `/queues/:queueID/tasks`**: Retrieve pending tasks from a specific queue.
-- **POST `/queues/:queueID/tasks`**: Create a new task in a specific queue.
+- **POST `/queues/:queueID/tasks`**: Create a new task in a specific queue. The request body must be a JSON.
+  - Here is an example of a request body:
+    ```json
+    {
+      "user_id": 8,
+      "video-url-to-process": ".../australia.mp4"
+    }
+    ```
 - **PUT `/queues/:queueID/tasks/:taskID`**: Update the status of a specific task.
+  - Here is an example of a request body:
+    ```json
+    {
+      "status": "completed",
+    }
+    ```
 
 ## Development
 

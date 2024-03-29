@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -28,7 +29,6 @@ type TaskRepository interface {
 	GetPendingTask(ctx context.Context, params GetPendingTaskParams) (Task, error)
 	UpdateTaskStatus(ctx context.Context, taskID string, status TaskStatus) error
 	CreateTask(ctx context.Context, task Task) (Task, error)
-	AssignTask(ctx context.Context, taskID, workerID string) error
 }
 
 type TaskStatus string
@@ -44,7 +44,7 @@ type Task struct {
 	QueueID   string
 	Status    TaskStatus
 	CreatedAt time.Time
-	Payload   []byte
+	Payload   any
 }
 
 type TaskServiceDependencies struct {
@@ -80,15 +80,22 @@ func (s *taskService) UpdateTaskStatus(ctx context.Context, taskID string, statu
 }
 
 func (s *taskService) CreateTask(ctx context.Context, queueID string, payload []byte) (Task, error) {
+	p := map[string]any{}
+
+	err := json.Unmarshal(payload, &p)
+	if err != nil {
+		return Task{}, err
+	}
+
 	task := Task{
 		ID:        xid.New().String(),
 		QueueID:   queueID,
 		Status:    TaskStatusPending,
 		CreatedAt: time.Now(),
-		Payload:   payload,
+		Payload:   p,
 	}
 
-	_, err := s.repository.CreateTask(ctx, task)
+	_, err = s.repository.CreateTask(ctx, task)
 	if err != nil {
 		return Task{}, err
 	}

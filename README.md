@@ -62,7 +62,7 @@ Wombat provides the following RESTful API endpoints for managing tasks within qu
   - Here is an example of a request body:
     ```json
     {
-      "status": "completed",
+      "status": "completed"
     }
     ```
 

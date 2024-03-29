@@ -29,11 +29,11 @@ func NewTaskController(deps TaskControllerDependencies) *TaskController {
 }
 
 type task struct {
-	ID        string `json:"id"`
-	QueueID   string `json:"queue_id"`
-	Status    string `json:"status"`
-	CreatedAt int64  `json:"created_at"`
-	Payload   any    `json:"payload"`
+	ID        string         `json:"id"`
+	QueueID   string         `json:"queue_id"`
+	Status    string         `json:"status"`
+	CreatedAt int64          `json:"created_at"`
+	Payload   map[string]any `json:"payload"`
 }
 
 func newTaskFromDomain(t domain.Task) task {

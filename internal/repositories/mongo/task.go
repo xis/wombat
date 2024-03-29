@@ -10,7 +10,7 @@ type task struct {
 	QueueID   string            `bson:"queue_id"`
 	Status    domain.TaskStatus `bson:"status"`
 	CreatedAt time.Time         `bson:"created_at"`
-	Payload   any               `bson:"payload"`
+	Payload   map[string]any    `bson:"payload"`
 }
 
 func (t *task) toDomain() (domain.Task, error) {

@@ -44,7 +44,7 @@ type Task struct {
 	QueueID   string
 	Status    TaskStatus
 	CreatedAt time.Time
-	Payload   any
+	Payload   map[string]any
 }
 
 type TaskServiceDependencies struct {

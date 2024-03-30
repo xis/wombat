@@ -6,9 +6,9 @@ Wombat Task Queue, an open-source task queue service built with Go and leveragin
 ## Planned Features
 
 - [x] **Task Prioritization**: Assign priority levels to tasks for processing.
-- **Stale Task Handling**: Automatically remove tasks that have been pending for too long.
-- **Task Metrics**: Track task processing times and success rates.
-- **gRPC Support**: Use gRPC for communication.
+- [ ] **Stale Task Handling**: Automatically remove tasks that have been pending for too long.
+- [ ] **Task Metrics**: Track task processing times and success rates.
+- [ ] **gRPC Support**: Use gRPC for communication.
 
 
 

@@ -41,7 +41,7 @@ func (r *MongoTaskRepository) GetPendingTask(ctx context.Context, params domain.
 	opts := options.FindOneAndUpdate().
 		SetReturnDocument(options.After).
 		SetSort(bson.M{
-			"created_at": 1,
+			"priority": -1,
 		})
 
 	update := bson.M{

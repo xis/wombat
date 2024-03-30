@@ -10,6 +10,7 @@ type task struct {
 	QueueID   string            `bson:"queue_id"`
 	Status    domain.TaskStatus `bson:"status"`
 	CreatedAt time.Time         `bson:"created_at"`
+	Priority  int               `bson:"priority"`
 	Payload   map[string]any    `bson:"payload"`
 }
 
@@ -19,6 +20,7 @@ func (t *task) toDomain() (domain.Task, error) {
 		QueueID:   t.QueueID,
 		Status:    t.Status,
 		CreatedAt: t.CreatedAt,
+		Priority:  t.Priority,
 		Payload:   t.Payload,
 	}, nil
 }
@@ -29,6 +31,7 @@ func newTaskFromDomain(t domain.Task) task {
 		QueueID:   t.QueueID,
 		Status:    t.Status,
 		CreatedAt: t.CreatedAt,
+		Priority:  t.Priority,
 		Payload:   t.Payload,
 	}
 }

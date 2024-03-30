@@ -2,7 +2,6 @@ package domain
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"time"
 
@@ -17,12 +16,18 @@ var (
 type TaskService interface {
 	GetPendingTask(ctx context.Context, params GetPendingTaskParams) (Task, error)
 	UpdateTaskStatus(ctx context.Context, taskID string, status TaskStatus) error
-	CreateTask(ctx context.Context, queueID string, payload []byte) (Task, error)
+	CreateTask(ctx context.Context, params CreateTaskParams) (Task, error)
 }
 
 type GetPendingTaskParams struct {
 	WorkerID string
 	QueueID  string
+}
+
+type CreateTaskParams struct {
+	QueueID  string
+	Priority int
+	Payload  map[string]any
 }
 
 type TaskRepository interface {
@@ -44,6 +49,7 @@ type Task struct {
 	QueueID   string
 	Status    TaskStatus
 	CreatedAt time.Time
+	Priority  int
 	Payload   map[string]any
 }
 
@@ -79,23 +85,17 @@ func (s *taskService) UpdateTaskStatus(ctx context.Context, taskID string, statu
 	return nil
 }
 
-func (s *taskService) CreateTask(ctx context.Context, queueID string, payload []byte) (Task, error) {
-	p := map[string]any{}
-
-	err := json.Unmarshal(payload, &p)
-	if err != nil {
-		return Task{}, err
-	}
-
+func (s *taskService) CreateTask(ctx context.Context, params CreateTaskParams) (Task, error) {
 	task := Task{
 		ID:        xid.New().String(),
-		QueueID:   queueID,
+		QueueID:   params.QueueID,
 		Status:    TaskStatusPending,
 		CreatedAt: time.Now(),
-		Payload:   p,
+		Priority:  params.Priority,
+		Payload:   params.Payload,
 	}
 
-	_, err = s.repository.CreateTask(ctx, task)
+	_, err := s.repository.CreateTask(ctx, task)
 	if err != nil {
 		return Task{}, err
 	}

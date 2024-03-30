@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"wombat/internal/domain"
@@ -33,6 +34,7 @@ type task struct {
 	QueueID   string         `json:"queue_id"`
 	Status    string         `json:"status"`
 	CreatedAt int64          `json:"created_at"`
+	Priority  int            `json:"priority"`
 	Payload   map[string]any `json:"payload"`
 }
 
@@ -42,6 +44,7 @@ func newTaskFromDomain(t domain.Task) task {
 		QueueID:   t.QueueID,
 		Status:    string(t.Status),
 		CreatedAt: t.CreatedAt.Unix(),
+		Priority:  t.Priority,
 		Payload:   t.Payload,
 	}
 }
@@ -103,8 +106,20 @@ func (c *TaskController) CreateTask(ctx *fiber.Ctx) error {
 	payload := []byte(ctx.Body())
 
 	queueID := ctx.Params("queueID")
+	priority := ctx.QueryInt("priority")
 
-	task, err := c.taskService.CreateTask(ctx.Context(), queueID, payload)
+	payloadMap := make(map[string]any)
+
+	err := json.Unmarshal(payload, &payloadMap)
+	if err != nil {
+		return err
+	}
+
+	task, err := c.taskService.CreateTask(ctx.Context(), domain.CreateTaskParams{
+		QueueID:  queueID,
+		Priority: priority,
+		Payload:  payloadMap,
+	})
 	if err != nil {
 		return err
 	}

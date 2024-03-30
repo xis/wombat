@@ -1,11 +1,11 @@
 # Wombat Task Queue
 
-Wombat Task Queue, an open-source task queue service built with Go and leveraging MongoDB for storage, is engineered to simplify task management and processing in distributed applications. 
+Wombat Task Queue, an open-source task queue service built with Go and leveraging MongoDB for storage, is engineered to simplify task management and processing in distributed applications. Supports prioritization.
 
 
 ## Planned Features
 
-- **Task Prioritization**: Assign priority levels to tasks for processing.
+- [x] **Task Prioritization**: Assign priority levels to tasks for processing.
 - **Stale Task Handling**: Automatically remove tasks that have been pending for too long.
 - **Task Metrics**: Track task processing times and success rates.
 - **gRPC Support**: Use gRPC for communication.
@@ -51,7 +51,7 @@ To start the Wombat service, run:
 Wombat provides the following RESTful API endpoints for managing tasks within queues:
 
 - **GET `/queues/:queueID/tasks`**: Retrieve pending tasks from a specific queue.
-- **POST `/queues/:queueID/tasks`**: Create a new task in a specific queue. The request body must be a JSON.
+- **POST `/queues/:queueID/tasks?priority=8`**: Create a new task in a specific queue. The request body must be a JSON.
   - Here is an example of a request body:
     ```json
     {
@@ -66,6 +66,10 @@ Wombat provides the following RESTful API endpoints for managing tasks within qu
       "status": "completed"
     }
     ```
+
+### Task Prioritization
+
+When creating a new task, you can specify a priority level. The higher the number, the higher the priority. If no priority is specified, the task will default to priority level 0.
 
 ## Development
 
